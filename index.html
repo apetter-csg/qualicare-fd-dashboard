@@ -246,39 +246,13 @@ footer{color:var(--muted);font-size:11.5px;line-height:1.7;border-top:1px solid 
   </header>
 
   <div class="tabs" role="tablist">
-    <button class="tab" role="tab" data-t="fn" aria-selected="true">Funnel</button>
-    <button class="tab" role="tab" data-t="li" aria-selected="false">LinkedIn performance</button>
+    <button class="tab" role="tab" data-t="li" aria-selected="true">LinkedIn performance</button>
     <button class="tab" role="tab" data-t="ld" aria-selected="false">Leads &amp; meetings</button>
   </div>
 
   <!-- ============ TAB 0 — the funnel Garret specified on 2026-09-17 ========= -->
-  <section id="tab-fn" class="stack">
-    <div class="kpis" id="fn-kpis"></div>
-
-    <div class="card">
-      <div class="head"><h3>Lead to close</h3>
-        <span class="note">each stage is the set of people with evidence of reaching it</span></div>
-      <div class="f2" id="f2"></div>
-      <div class="note" style="margin-top:11px" id="f2note"></div>
-    </div>
-
-    <div class="card">
-      <div class="head"><h3>Call attempts</h3>
-        <span class="note" id="atwin"></span></div>
-      <div class="atwrap" id="atwrap"></div>
-      <div class="note" style="margin-top:11px" id="atnote"></div>
-    </div>
-
-    <div class="card">
-      <div class="head"><h3>Applications</h3>
-        <span class="note">PCQs submitted, all time — GoHighLevel is the source of record</span></div>
-      <div class="tw"><table id="t-apps"></table></div>
-      <div class="note" style="margin-top:10px" id="appnote"></div>
-    </div>
-  </section>
-
   <!-- ============ TAB 1 ============ -->
-  <section id="tab-li" class="stack hide">
+  <section id="tab-li" class="stack">
     <div class="rangebar">
       <div class="seg" id="presets" role="tablist"></div>
       <label class="dpick" for="dFrom"><span class="lbl">From</span>
@@ -806,7 +780,7 @@ $("srcchips").innerHTML=Object.entries(M.sources).map(([k,v])=>{
 
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{
   document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-selected",x===b));
-  ["fn","li","ld"].forEach(t=>$("tab-"+t).classList.toggle("hide",b.dataset.t!==t));});
+  ["li","ld"].forEach(t=>$("tab-"+t).classList.toggle("hide",b.dataset.t!==t));});
 
 const PRESETS=[["7","Last 7 days"],["30","Last 30 days"],["mtd","This month"],["all","All time"]];
 function applyPreset(k){
@@ -888,6 +862,8 @@ ldSync();
       first calls against 188 contacts actually dialled.
 */
 function renderFN(){
+  // The v1 build strips the Funnel tab's markup; bail out rather than throw.
+  if(!$("f2")) return;
   const F=M.leads.funnel, A=M.leads.attempts, c=M.leads.counts, tg=M.targets;
   const st=k=>F.stages.find(x=>x.key===k)||{n:0};
   const showRate=c.sales_booked_ever?100*c.sales_completed/c.sales_booked_ever:null;
